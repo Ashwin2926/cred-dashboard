@@ -5,6 +5,6 @@ import { MOCK_DATA } from '@/lib/data';
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function GET() {
-  await sleep(2500); // Wait for 2.5 seconds to make loading visible
+  await sleep(2500);  
   return NextResponse.json(MOCK_DATA);
 }

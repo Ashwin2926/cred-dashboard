@@ -84,7 +84,7 @@ export default function Home() {
       </main>
       
       <footer className="text-center mt-12 text-xs text-muted-foreground">
-          <p>Frontend Developer Task - by [Your Name]</p>
+          <p>Frontend Developer Task - by Ashwin</p>
       </footer>
     </div>
   );
