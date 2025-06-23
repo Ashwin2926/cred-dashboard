@@ -18,7 +18,13 @@ type Benefit = {
 type DashboardData = { user: User; rewards: Rewards; benefits: Benefit[] };
 
 async function getDashboardData(): Promise<DashboardData> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/dashboard`, { cache: 'no-store' });
+const baseUrl =
+  process.env.NEXT_PUBLIC_APP_URL ||
+  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+  'http://localhost:3000'; 
+
+const res = await fetch(`${baseUrl}/api/dashboard`, { cache: 'no-store' });
+
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
