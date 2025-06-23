@@ -18,14 +18,13 @@ type Benefit = {
 type DashboardData = { user: User; rewards: Rewards; benefits: Benefit[] };
 
 async function getDashboardData(): Promise<DashboardData> {
+
   const baseUrl =
     (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
     'http://localhost:3000';
 
   try {
-    const res = await fetch(`${baseUrl}/api/dashboard`, {
-      cache: 'no-store',
-    });
+    const res = await fetch(`${baseUrl}/api/dashboard`);
 
     if (!res.ok) {
       console.error(
