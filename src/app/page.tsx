@@ -8,27 +8,39 @@ import { Skeleton } from "@/components/ui/skeleton";
 // Define types for our data
 type User = { name: string; avatarUrl: string; level: number; xp: number; };
 type Rewards = { points: number; target: number; };
-type Benefit = { 
+type Benefit = {
   id: number;
-  title: string; 
-  description: string; 
-  iconName: "Gift" | "ShieldCheck" | "Zap"; // Updated type
-  cta: string; 
+  title: string;
+  description: string;
+  iconName: "Gift" | "ShieldCheck" | "Zap";
+  cta: string;
 };
 type DashboardData = { user: User; rewards: Rewards; benefits: Benefit[] };
 
 async function getDashboardData(): Promise<DashboardData> {
-const baseUrl =
-  process.env.NEXT_PUBLIC_APP_URL ||
-  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-  'http://localhost:3000'; 
+  const baseUrl =
+    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+    'http://localhost:3000';
 
-const res = await fetch(`${baseUrl}/api/dashboard`, { cache: 'no-store' });
+  try {
+    const res = await fetch(`${baseUrl}/api/dashboard`, {
+      cache: 'no-store',
+    });
 
-  if (!res.ok) {
+    if (!res.ok) {
+      console.error(
+        'Failed to fetch /api/dashboard:',
+        res.status,
+        res.statusText
+      );
+      throw new Error('Failed to fetch data');
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error('Fetch to /api/dashboard threw an error:', error);
     throw new Error('Failed to fetch data');
   }
-  return res.json();
 }
 
 // Skeletons for loading state with pulse animation
@@ -37,7 +49,7 @@ function DashboardSkeleton() {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
-           <Skeleton className="h-[150px] w-full rounded-2xl glass-card animate-pulse" />
+          <Skeleton className="h-[150px] w-full rounded-2xl glass-card animate-pulse" />
         </div>
         <div>
           <Skeleton className="h-[150px] w-full rounded-2xl glass-card animate-pulse" />
@@ -47,7 +59,10 @@ function DashboardSkeleton() {
         <Skeleton className="h-8 w-48 mb-4 rounded-lg animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {Array.from({ length: 4 }).map((_, i) => (
-             <Skeleton key={i} className="h-[220px] w-full rounded-2xl glass-card animate-pulse" />
+            <Skeleton
+              key={i}
+              className="h-[220px] w-full rounded-2xl glass-card animate-pulse"
+            />
           ))}
         </div>
       </div>
@@ -57,7 +72,7 @@ function DashboardSkeleton() {
 
 async function Dashboard() {
   const data = await getDashboardData();
-  
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -88,9 +103,9 @@ export default function Home() {
           <Dashboard />
         </Suspense>
       </main>
-      
+
       <footer className="text-center mt-12 text-xs text-muted-foreground">
-          <p>Frontend Developer Task - by Ashwin</p>
+        <p>Frontend Developer Task - by Ashwin</p>
       </footer>
     </div>
   );
